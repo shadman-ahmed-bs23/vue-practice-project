@@ -1,14 +1,16 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <h1>Hi {{ getUser.name }}</h1>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "HelloWorld",
-  props: {
-    msg: String,
+
+  computed: {
+    ...mapGetters(["getUser"]),
   },
 };
 </script>
