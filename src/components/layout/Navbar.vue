@@ -1,9 +1,14 @@
 <template>
 	<header>
 		<nav>
-			<h1><router-link to="/">Find a Coach</router-link></h1>
+			<h1><router-link to="/">Social Site with Vue</router-link></h1>
 			<ul>
 				<li><router-link to="/about">About</router-link></li>
+				<li v-if="isLoggedIn"><router-link to="/messages">Messages</router-link></li>
+				<li v-else><router-link to="/auth">Login</router-link></li>
+				<li v-if="isLoggedIn">
+					<base-button @click="logout">Logout</base-button>
+				</li>
 			</ul>
 		</nav>
 	</header>
@@ -12,6 +17,17 @@
 <script>
 export default {
 	name: 'Navbar',
+	computed: {
+		isLoggedIn() {
+			return this.$store.getters.isAuthenticated;
+		},
+	},
+	methods: {
+		logout() {
+			this.$store.dispatch('logout');
+			this.$router.replace('/');
+		},
+	},
 };
 </script>
 
@@ -27,6 +43,7 @@ header {
 
 header a {
 	text-decoration: none;
+	font-weight: 700;
 	color: #fff;
 	display: inline-block;
 	padding: 0.75rem 1.5rem;
@@ -37,7 +54,7 @@ header a {
 a:active,
 a:hover,
 a.router-link-active {
-	border: 1px solid #fff;
+	border: 2px solid #fff;
 }
 
 h1 {
