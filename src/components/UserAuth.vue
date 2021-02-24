@@ -13,7 +13,8 @@
 					<input type="password" id="password" v-model.trim="password" />
 				</div>
 				<p v-if="!formIsValid">
-					Please enter a valid email or password length should be more than 6 characters
+					Please enter a valid email or password length should be more than 6
+					characters
 				</p>
 				<base-button>{{ submitButtonCaption }} </base-button>
 				<br />
@@ -31,30 +32,30 @@
 
 <script>
 export default {
-	name: 'UserAuth',
+	name: "UserAuth",
 	data() {
 		return {
-			email: '',
-			password: '',
+			email: "",
+			password: "",
 			formIsValid: true,
-			mode: 'login',
+			mode: "login",
 			isLoading: false,
 			error: null,
 		};
 	},
 	computed: {
 		submitButtonCaption() {
-			if (this.mode === 'login') {
-				return 'Login';
+			if (this.mode === "login") {
+				return "Login";
 			} else {
-				return 'Signup';
+				return "Signup";
 			}
 		},
 		switchModeButtonCaption() {
-			if (this.mode === 'login') {
-				return 'Signup instead';
+			if (this.mode === "login") {
+				return "Signup instead";
 			} else {
-				return 'Login instead';
+				return "Login instead";
 			}
 		},
 	},
@@ -62,7 +63,11 @@ export default {
 		async submitForm() {
 			this.formIsValid = true;
 			//Form Validation
-			if (this.email === '' || !this.email.includes('@') || this.password.length < 6) {
+			if (
+				this.email === "" ||
+				!this.email.includes("@") ||
+				this.password.length < 6
+			) {
 				this.formIsValid = false;
 				return;
 			}
@@ -74,24 +79,24 @@ export default {
 			};
 			// Send http request
 			try {
-				if (this.mode === 'login') {
-					await this.$store.dispatch('login', actionPayload);
+				if (this.mode === "login") {
+					await this.$store.dispatch("login", actionPayload);
 				} else {
-					await this.$store.dispatch('signup', actionPayload);
+					await this.$store.dispatch("signup", actionPayload);
 				}
-				const redirectUrl = '/';
+				const redirectUrl = "/";
 				this.$router.replace(redirectUrl);
 			} catch (err) {
-				this.error = err.message || 'Failed to authenticate, try again later';
+				this.error = err.message || "Failed to authenticate, try again later";
 			}
 
 			this.isLoading = false;
 		},
 		switchAuthMode() {
-			if (this.mode == 'login') {
-				this.mode = 'signup';
+			if (this.mode == "login") {
+				this.mode = "signup";
 			} else {
-				this.mode = 'login';
+				this.mode = "login";
 			}
 		},
 	},
