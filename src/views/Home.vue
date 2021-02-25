@@ -44,13 +44,44 @@
 
 <script>
 //import axios from "axios";
-//import { ref, onUpdated } from "vue";
+import { ref } from "vue";
 //import { useStore } from "vuex";
 import Post from "../components/Post";
 export default {
 	name: "Home",
 	components: {
 		Post,
+	},
+	setup() {
+		const showModal = ref(false);
+		const postData = ref({
+			title: "",
+			body: "",
+		});
+
+		window.addEventListener("click", (e) => {
+			if (e.target.className == "modal") {
+				showModal.value = false;
+			}
+		});
+		const handlePostSubmit = (e) => {
+			e.preventDefault();
+			console.log(postData.value);
+			postData.value = {
+				title: "",
+				body: "",
+			};
+			showModal.value = false;
+		};
+		// const getUsers = async () => {
+		// 	axios
+		// 		.get("https://6024a6e736244d001797ae01.mockapi.io/site/data/posts")
+		// 		.then((data) => {
+		// 			posts.value = data.data;
+		// 		});
+		// };
+		// onMounted(getUsers);
+		return { postData, showModal, handlePostSubmit };
 	},
 	data() {
 		return {
