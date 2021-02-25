@@ -1,5 +1,7 @@
 export default {
   async loadPosts(context) {
+    //const response = await fetch("https://social-site-with-vue-default-rtdb.firebaseio.com/posts.json");
+    
     const response = await fetch("https://6024a6e736244d001797ae01.mockapi.io/site/data/posts");
     
     const responseData = await response.json();

@@ -23,7 +23,7 @@
 							/>
 							<textarea
 								rows="9"
-								calss="post-data"
+								class="post-data"
 								placeholder="Write your Feelings"
 								v-model="postData.body"
 								required
@@ -44,65 +44,46 @@
 
 <script>
 //import axios from "axios";
-import { ref, onMounted } from "vue";
-import { useStore } from "vuex";
+//import { ref, onUpdated } from "vue";
+//import { useStore } from "vuex";
 import Post from "../components/Post";
 export default {
 	name: "Home",
-	setup() {
-		const store = useStore();
-		//console.log(store.state.posts);
-
-		const showModal = ref(false);
-		//const posts = ref([]);
-		const postData = ref({
-			title: "",
-			body: "",
-		});
-
-		const loadPosts = async () => {
-			try {
-				await store.dispatch("posts/loadPosts");
-			} catch (error) {
-				alert(error);
-			}
-		};
-
-		// posts.value = computed(() => store.state.posts);
-		// console.log(posts.value);
-
-		const posts = store.getters["posts/posts"];
-
-		window.addEventListener("click", (e) => {
-			if (e.target.className == "modal") {
-				showModal.value = false;
-			}
-		});
-
-		const handlePostSubmit = (e) => {
-			e.preventDefault();
-			console.log(postData.value);
-			postData.value = {
-				title: "",
-				body: "",
-			};
-			showModal.value = false;
-		};
-		// const getUsers = async () => {
-		// 	axios
-		// 		.get("https://6024a6e736244d001797ae01.mockapi.io/site/data/posts")
-		// 		.then((data) => {
-		// 			posts.value = data.data;
-		// 		});
-		// };
-		//onMounted(getUsers);
-
-		onMounted(loadPosts);
-
-		return { posts, postData, showModal, handlePostSubmit };
-	},
 	components: {
 		Post,
+	},
+	data() {
+		return {
+			isLoading: true,
+			error: null,
+		};
+	},
+	computed: {
+		isLoggedIn() {
+			return this.$store.getters.isAuthenticated;
+		},
+		posts() {
+			const posts = this.$store.getters["posts/posts"];
+
+			return posts;
+		},
+	},
+	created() {
+		this.loadPosts();
+	},
+	methods: {
+		async loadPosts() {
+			this.isLoading = true;
+
+			try {
+				await this.$store.dispatch("posts/loadPosts");
+			} catch (error) {
+				this.error = error.message || "Something went wrong";
+				alert(this.error);
+			}
+
+			this.isLoading = false;
+		},
 	},
 };
 </script>
