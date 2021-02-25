@@ -43,48 +43,79 @@
 </template>
 
 <script>
-import axios from "axios";
-import { onMounted, ref } from "vue";
+//import axios from "axios";
+import { ref } from "vue";
+//import { useStore } from "vuex";
 import Post from "../components/Post";
 export default {
-  name: "Home",
-  setup() {
-    const showModal = ref(false);
-    const posts = ref([]);
-    const postData = ref({
-      title: "",
-      body: "",
-    });
+	name: "Home",
+	components: {
+		Post,
+	},
+	setup() {
+		const showModal = ref(false);
+		const postData = ref({
+			title: "",
+			body: "",
+		});
 
-    window.addEventListener("click", (e) => {
-      if (e.target.className == "modal") {
-        showModal.value = false;
-      }
-    });
+		window.addEventListener("click", (e) => {
+			if (e.target.className == "modal") {
+				showModal.value = false;
+			}
+		});
+		const handlePostSubmit = (e) => {
+			e.preventDefault();
+			console.log(postData.value);
+			postData.value = {
+				title: "",
+				body: "",
+			};
+			showModal.value = false;
+		};
+		// const getUsers = async () => {
+		// 	axios
+		// 		.get("https://6024a6e736244d001797ae01.mockapi.io/site/data/posts")
+		// 		.then((data) => {
+		// 			posts.value = data.data;
+		// 		});
+		// };
+		// onMounted(getUsers);
+		return { postData, showModal, handlePostSubmit };
+	},
+	data() {
+		return {
+			isLoading: true,
+			error: null,
+		};
+	},
+	computed: {
+		isLoggedIn() {
+			return this.$store.getters.isAuthenticated;
+		},
+		posts() {
+			const posts = this.$store.getters["posts/posts"];
 
-    const handlePostSubmit = (e) => {
-      e.preventDefault();
-      console.log(postData.value);
-      postData.value = {
-        title: "",
-        body: "",
-      };
-      showModal.value = false;
-    };
-    const getUsers = async () => {
-      axios
-        .get("https://6024a6e736244d001797ae01.mockapi.io/site/data/posts")
-        .then((data) => {
-          posts.value = data.data;
-        });
-    };
-    onMounted(getUsers);
+			return posts;
+		},
+	},
+	created() {
+		this.loadPosts();
+	},
+	methods: {
+		async loadPosts() {
+			this.isLoading = true;
 
-    return { posts, postData, showModal, handlePostSubmit };
-  },
-  components: {
-    Post,
-  },
+			try {
+				await this.$store.dispatch("posts/loadPosts");
+			} catch (error) {
+				this.error = error.message || "Something went wrong";
+				alert(this.error);
+			}
+
+			this.isLoading = false;
+		},
+	},
 };
 </script>
 
